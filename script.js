@@ -22,17 +22,27 @@ const app = new Vue({
   },
   methods: {
     async generateAndDownload() {
-      let img = await getImage(this.svgURL);
-      canvas.width = this.customWidth;
-      canvas.height = this.customHeight;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      let dataURL = canvas.toDataURL();
-      img = 0;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.width = 1;
-      canvas.height = 1;
-      saveAs(dataURL, `svg-${Date.now()}-${this.customWidth}x${this.customHeight}.png`);
+      try {
+        let img = await getImage(this.svgURL);
+        canvas.width = this.customWidth;
+        canvas.height = this.customHeight;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        let dataURL = canvas.toDataURL();
+        img = 0;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = 1;
+        canvas.height = 1;
+        saveAs(dataURL, `svg-${Date.now()}-${this.customWidth}x${this.customHeight}.png`);
+      } catch (error) {
+        let msg = `${error}`;
+        if (msg.startsWith("SecurityError")) {
+          alert(`It seems that there was a CORS error here if you want to convert this svg file, you have to download the file to your computer first. And then you have to select that file you downloaded.`);
+        } else {
+          alert(msg);
+        }
+        this.resetOptions();
+      }
     },
     resetOptions() {
       this.customWidth = 0;
@@ -64,7 +74,7 @@ const app = new Vue({
           this.customWidth == 0 ||
           this.customHeight == 0
         ) return this.resetOptions();
-      } catch {
+      } catch (err) {
         return this.resetOptions();
       }
 
