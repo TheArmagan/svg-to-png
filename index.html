@@ -12,7 +12,7 @@
 </head>
 <body>
   <div id="app">
-    <md-app md-mode="fixed" class="default-dark">
+    <md-app md-mode="fixed" class="default-dark xsmall small medium">
       <md-app-toolbar class="md-accent">
         <span class="md-title">SVG to PNG</span>
         <div class="md-toolbar-section-end">
@@ -25,7 +25,7 @@
       </md-app-toolbar>
       <md-app-content>        
         <div class="md-layout md-gutter">
-          <div class="md-layout-item md-size-25 flex-center">
+          <div class="md-layout-item md-xsmall-size-100 md-small-size-25 flex-center">
             <md-field>
               <md-select v-model="inType" value="file">
                 <md-option value="file">From FILE</md-option>
@@ -33,32 +33,32 @@
               </md-select>
             </md-field>
           </div>
-          <div class="md-layout-item flex-center">
+          <div class="md-layout-item md-xsmall-size-100 flex-center">
             <md-field v-show="inType == 'file'">
               <label>Select SVG File</label>
               <md-file ref="file" v-model="inFile" accept="image/svg+xml" />
             </md-field>
             <md-field v-show="inType == 'url'">
               <md-icon>link</md-icon>
-              <label>File URL</label>
+              <label>SVG File URL</label>
               <md-input type="url" v-model="inURL"></md-input>
             </md-field>
           </div>
         </div>
         <div class="md-layout md-gutter">
-          <div class="md-layout-item flex-center">
+          <div class="md-layout-item md-xsmall-size-100 flex-center">
             <md-field>
               <label>Width</label>
               <md-input v-model="customWidth" type="number" :disabled="!svgURL"></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item flex-center">
+          <div class="md-layout-item md-xsmall-size-100 flex-center">
             <md-field>
               <label>Height</label>
               <md-input v-model="customHeight" type="number" :disabled="!svgURL"></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item md-size-15 flex-center">
+          <div class="md-layout-item md-xsmall-size-100 flex-center">
             <md-button class="md-raised md-accent" :disabled="!svgURL" @click="generateAndDownload">Download</md-button>
           </div>
         </div>

@@ -27,3 +27,7 @@ html, body {
 .md-field>.md-icon:after {
   all: unset;
 }
+
+#app > div > main > div.md-app-scroller.md-layout-column.md-flex.md-theme-default.md-scrollbar > div {
+  overflow-x: hidden;
+}
