@@ -32,7 +32,7 @@ const app = new Vue({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       canvas.width = 1;
       canvas.height = 1;
-      saveAs(dataURL, `svg-${Date.now()}-${canvas.width}x${canvas.height}.png`);
+      saveAs(dataURL, `svg-${Date.now()}-${this.customWidth}x${this.customHeight}.png`);
     },
     resetOptions() {
       this.customWidth = 0;
