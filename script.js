@@ -28,7 +28,11 @@ const app = new Vue({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       let dataURL = canvas.toDataURL();
-      saveAs(dataURL, `armagan-svg-to-png-${Date.now()}.png`);
+      img = 0;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.width = 1;
+      canvas.height = 1;
+      saveAs(dataURL, `svg-${Date.now()}-${canvas.width}x${canvas.height}.png`);
     },
     resetOptions() {
       this.customWidth = 0;
