@@ -3,6 +3,10 @@
   margin: 0;
   box-sizing: border-box;
   outline: 0;
+
+  --md-theme-default-primary: #474787 !important;
+  --md-theme-default-accent: #34ace0 !important;
+  --md-theme-default-accent-on-background: #34ace0 !important;
 }
 
 html, body {

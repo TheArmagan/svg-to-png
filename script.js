@@ -17,8 +17,21 @@ const app = new Vue({
       inURL: "",
       svgURL: "",
       customWidth: 0,
-      customHeight: 0
+      customHeight: 0,
+      loading: 0,
+      getPipeURL: "",
+      isFromURLReady: false
     }
+  },
+  async mounted() {
+    await (new Promise(r => {this.$nextTick(r)}));
+    let getPipeURL = `https://getpipe${randomNumber(1, 5)}.herokuapp.com`;
+    this.loading = -1;
+    fetch(getPipeURL).then(() => {
+      this.isFromURLReady = true;
+      this.loading = 0;
+      this.getPipeURL = `${getPipeURL}/pipe/get`;
+    });
   },
   methods: {
     async generateAndDownload() {
@@ -40,6 +53,7 @@ const app = new Vue({
           alert(`It seems that there was a CORS error here if you want to convert this svg file, you have to download the file to your computer first. And then you have to select that file you downloaded.`);
         } else {
           alert(msg);
+          console.log(msg)
         }
         this.resetOptions();
       }
@@ -48,9 +62,12 @@ const app = new Vue({
       this.customWidth = 0;
       this.customHeight = 0;
       this.svgURL = "";
+      this.loading = 0;
     },
     async onInUpdate() {
+      this.loading = -1;
       switch (this.inType) {
+        
         case "file": {
           let file = document.getElementById(this.$refs.file.id)?.files?.[0];
           if (!file) return this.resetOptions();
@@ -60,7 +77,23 @@ const app = new Vue({
         };
         case "url": {
           if (!this.inURL) return this.resetOptions();
-          this.svgURL = this.inURL;
+          let fetched = await fetch(this.getPipeURL, {
+            method: "post",
+            headers: {
+              "content-type": "application/json"
+            },
+            body: JSON.stringify({
+              type: "text",
+              url: this.inURL
+            })
+          });
+          let json = await fetched.json();
+          if (json?.data?.statusCode != 200 || !json.ok) {
+            alert("Server is not returned with status code 200!");
+            this.resetOptions();
+            return;
+          }
+          this.svgURL = `data:image/svg+xml;utf8,${encodeURIComponent(json.data.body)}`;
           break;
         };
       };
@@ -70,13 +103,13 @@ const app = new Vue({
         this.customWidth = img.width;
         this.customHeight = img.height;
         img = 0;
-        if (
-          this.customWidth == 0 ||
-          this.customHeight == 0
-        ) return this.resetOptions();
+        if (this.customWidth == 0 || this.customHeight == 0) return this.resetOptions();
       } catch (err) {
         return this.resetOptions();
+      } finally {
+        this.loading = 0;
       }
+      
 
       
     }
@@ -87,6 +120,15 @@ const app = new Vue({
     inURL(...args) { this.onInUpdate(...args) }
   }
 });
+
+/**
+ * @param {Number} min 
+ * @param {Number} max 
+ * @returns {Number}
+ */
+function randomNumber(min, max) { 
+  return Math.floor(Math.random() * (max - min) + min);
+} 
 
 /**
  * @param {File} file 
@@ -116,13 +158,9 @@ function readFile(file, as = "Text", encoding=null) {
 function getImage(src = "") {
   return new Promise((res, rej) => {
     let img = new Image();
-    if (src.toLowerCase().indexOf("http") != -1) {
-      img.addEventListener("load", () => {
-        res(img);
-      }, { once: true });
-    } else {
+    img.addEventListener("load", () => {
       res(img);
-    }
+    }, { once: true });
     
     img.addEventListener("error", (err) => {
       rej(err);

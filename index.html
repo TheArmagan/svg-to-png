@@ -11,20 +11,23 @@
   <meta property="og:description" content="You can easily convert SVG vectors to PNG images now!" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
   <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default-dark.css">
+  <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="app">
-    <md-app md-mode="fixed" class="default-dark xsmall small medium">
-      <md-app-toolbar class="md-accent">
-        <span class="md-title">SVG to PNG</span>
+    <md-app md-mode="fixed" class="xsmall small medium">
+      <md-app-toolbar>
+        <span class="md-title">
+          SVG to PNG
+        </span>
         <div class="md-toolbar-section-end">
           <a href="https://github.com/thearmagan/svg-to-png">
             <md-button>
               Github
             </md-button>
           </a>
+          <md-progress-spinner v-if="loading != 0" class="md-accent flex-center" :md-mode="loading == -1 ? 'indeterminate' : 'determinate'" :md-value="loading" :md-diameter="25" :md-stroke="3" style="margin-left: 4px;"></md-progress-spinner>
         </div>
       </md-app-toolbar>
       <md-app-content>        
@@ -33,7 +36,7 @@
             <md-field>
               <md-select v-model="inType" value="file">
                 <md-option value="file">From FILE</md-option>
-                <md-option value="url">From URL</md-option>
+                <md-option value="url" :disabled="!isFromURLReady">From URL{{isFromURLReady ? "" : " (Loading..)"}}</md-option>
               </md-select>
             </md-field>
           </div>
@@ -63,7 +66,7 @@
             </md-field>
           </div>
           <div class="md-layout-item md-xsmall-size-100 flex-center">
-            <md-button class="md-raised md-accent" :disabled="!svgURL" @click="generateAndDownload">Download</md-button>
+            <md-button class="md-raised md-accent" :disabled="!svgURL" @click="generateAndDownload">Generate & Download</md-button>
           </div>
         </div>
       </md-app-content>
