@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SVG to PNG</title>
   <meta property="og:site_name" content="armagan.rest" />
-  <meta property="theme-color" content="#FF5252" />
+  <meta property="theme-color" content="#34ACE0" />
   <meta property="og:title" content="SVG to PNG" />
   <meta property="og:description" content="You can easily convert SVG vectors to PNG images now!" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
@@ -53,6 +53,12 @@
           </div>
         </div>
         <div class="md-layout md-gutter">
+          <div class="md-layout-item md-xsmall-size-100 flex-center">
+            <md-field>
+              <label>Scale Factor</label>
+              <md-input v-model="scaleFactor" type="number" :disabled="!svgURL"></md-input>
+            </md-field>
+          </div>
           <div class="md-layout-item md-xsmall-size-100 flex-center">
             <md-field>
               <label>Width</label>

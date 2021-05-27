@@ -16,11 +16,14 @@ const app = new Vue({
       inFile: null,
       inURL: "",
       svgURL: "",
+      ogWidth: 0,
+      ogHeight: 0,
       customWidth: 0,
       customHeight: 0,
       loading: 0,
       getPipeURL: "",
-      isFromURLReady: false
+      isFromURLReady: false,
+      scaleFactor: 1
     }
   },
   async mounted() {
@@ -59,10 +62,13 @@ const app = new Vue({
       }
     },
     resetOptions() {
+      this.ogWidth = 0;
+      this.ogHeight = 0;
       this.customWidth = 0;
       this.customHeight = 0;
       this.svgURL = "";
       this.loading = 0;
+      this.scaleFactor = 1;
     },
     async onInUpdate() {
       this.loading = -1;
@@ -100,8 +106,10 @@ const app = new Vue({
 
       try {
         let img = await getImage(this.svgURL);
-        this.customWidth = img.width;
-        this.customHeight = img.height;
+        this.customWidth = img.width * this.scaleFactor;
+        this.customHeight = img.height * this.scaleFactor;
+        this.ogWidth = img.width;
+        this.ogHeight = img.height;
         img = 0;
         if (this.customWidth == 0 || this.customHeight == 0) return this.resetOptions();
       } catch (err) {
@@ -117,7 +125,12 @@ const app = new Vue({
   watch: {
     inType(...args) { this.onInUpdate(...args) },
     inFile(...args) { this.onInUpdate(...args) },
-    inURL(...args) { this.onInUpdate(...args) }
+    inURL(...args) { this.onInUpdate(...args) },
+    scaleFactor(newFactor) {
+      if (isNaN(newFactor)) return;
+      this.customWidth = this.ogWidth * newFactor;
+      this.customHeight = this.ogWidth * newFactor;
+    }
   }
 });
 
