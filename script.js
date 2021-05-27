@@ -129,7 +129,7 @@ const app = new Vue({
     scaleFactor(newFactor) {
       if (isNaN(newFactor)) return;
       this.customWidth = this.ogWidth * newFactor;
-      this.customHeight = this.ogWidth * newFactor;
+      this.customHeight = this.ogHeight * newFactor;
     }
   }
 });
